@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Data</title>
+    <style>
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(239, 252, 252);
+            
+        }
+
+        .form_el {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+        }
+
+        form {
+            margin: 20px;
+            padding: 10px;
+            background-color: azure;
+            border-radius: 10px;
+        }
+
+        #name , #contact , #address , #email , #city , #country{
+            border-radius: 10px;
+            padding: 10px;
+            font-style: italic;
+        }
+         
+         #submit-btn {
+            border-radius: 5px;
+            background-color: rgb(239, 252, 252);
+            color: black;
+            border: 2px solid rgb(24, 22, 22);
+            padding: 5px;
+         }
+
+         button {
+            background-color: azure;
+            color: black;
+            border-radius: 5px;
+            border: 2px solid rgb(24, 22, 22);
+            padding: 5px;
+         }
+
+        table {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid white;
+            border-radius: 5px;
+            background-color: azure;
+            width: 300px;
+        }
+
+        table thead tr td {
+            border: 1px solid rgb(17, 6, 6);
+            padding: 4px;
+            font-style: italic;
+        }
+
+        table tbody tr td {
+            border: 1px solid rgb(0, 0, 0);
+            padding: 30px 4px;
+            font-style: italic;
+        }
+
+        .table-content {
+            height: 400px;
+            overflow-y: scroll;
+            width: max-content;
+        }
+
+        .modal {
+            width: 100vw;
+            height: 100vh;
+            background-color: rgb(151, 204, 206);
+            top: 0;
+            padding-top: 30px;
+            display: none;
+            position: fixed;
+        }
+
+        .modal-content {
+            width: 300px;
+            height: 400px;
+            background-color: white;
+            margin: 0 auto;
+            border-radius: 6px;
+            display: flex;
+            padding: 6px 12px;
+            flex-direction: column;
+            font-style: italic;
+        }
+
+        .modal-content > .close {
+            padding: 10px 6px;
+            font-size: 25px;
+            align-self: flex-end;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+ <div class="wrapper">
+    <form >
+        <div class="form_el">
+            <label for="name">Name</label>
+            <input type="text" name="name" placeholder="Enter name" id="name">
+        </div>
+    
+        <div class="form_el">
+            <label for="email">Email</label>
+            <input type="email" name="email" placeholder="Enter email" id="email">
+        </div>
+    
+        <div class="form_el">
+            <label for="contact">Contact</label>
+            <input type="text" name="contact" placeholder="Enter contact" id="contact">
+        </div>
+    
+        <div class="form_el">
+            <label for="address">Address</label>
+            <input type="text" name="address" placeholder="Enter address" id="address">
+        </div>
+    
+        <div class="form_el">
+            <label for="city">City</label>
+            <input type="text" name="city" placeholder="Enter city" id="city">
+        </div>
+    
+        <div class="form_el">
+            <label for="country">Country</label>
+            <input type="text" name="country" placeholder="Enter country" id="country">
+        </div>
+        <input type="submit" value="Submit" id="submit-btn">
+      </form>
+    
+      <button  onclick="reset()" style="margin: 20px;">Reset Table</button>
+    
+      <div class="table-content">
+        <table>
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Email</td>
+                    <td>actions</td>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+               
+            </tbody>
+          </table>
+    </div>
+    
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div>
+            <h3>User details!</h3>
+            <div id="modal-data">
+    
+            </div>
+        </div>
+      </div>
+    </div>
+ </div>
+
+  <script>
+     let aa = [];
+
+    document.getElementById('submit-btn').addEventListener('click', 
+        function(event) {
+            event.preventDefault();
+           
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+            let contact = document.getElementById("contact").value;
+            let address = document.getElementById("address").value;
+            let city = document.getElementById("city").value;
+            let country = document.getElementById("country").value;
+            if(!name || !email || !contact || !address || !city || !country) {
+                alert("enter the required all feilds");
+                return;
+            }
+
+            if(aa.includes(name)) {
+                alert("exists name");
+                return;
+            }
+            const newData = {
+                name,
+                email,
+                contact,
+                address,
+                city,
+                country,
+            }
+            aa.push(newData);
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("contact").value = "";
+            document.getElementById("address").value = ""; 
+            document.getElementById("city").value = "";
+            document.getElementById("country").value = "";
+            tableUpdate();  
+              
+    });
+      
+    tableUpdate();
+   
+    function tableUpdate(){
+        let tbody = document.getElementById("tbody");
+        tbody.innerHTML= "";
+        aa.forEach((item, index) => {
+            tbody.innerHTML += `<tr>
+                                <td>${item.name}</td>
+                                <td>email: ${item.email}</td>
+                                <td><button onclick="showModal(${index})">View</button></td>
+                            </tr>`
+    })
+    }
+    
+    const reset = () => {
+        let tbody = document.getElementById("tbody");
+        tbody.innerHTML = "";
+        aa = [];
+    }
+
+   const showModal = (item) => {
+    const itemData = aa[item];
+    document.getElementById("myModal").style.display = "block";
+    let modalData = document.getElementById("modal-data");
+    modalData.innerHTML = "";
+    modalData.innerHTML = `<p>Contact: ${itemData.contact}</p>
+    <p>Address: ${itemData.address}</p>
+    <p>City: ${itemData.city}</p>
+    <p>Country: ${itemData.country}</p>
+    <p>name: ${itemData.name}`;
+   } 
+
+   const closeModal = () => {
+    document.getElementById("myModal").style.display = "none";
+   }
+  </script>
+</body>
+</html>
